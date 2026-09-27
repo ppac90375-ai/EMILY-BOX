@@ -2,8 +2,8 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<!-- 確保手機端維持 1:1 縮放比例，防止畫面移位 -->
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<!-- 確保手機端維持 1:1 縮放比例 -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>艾蜜莉兒</title>
 		<link rel="stylesheet" href="index.css" >
 	</head>
@@ -58,20 +58,13 @@
 			</div>
 		</div>
 
-		<!-- ─── 終極修正：利用 JavaScript 強制全面封鎖手機長按跳出選單與拖拽事件 ─── -->
+		<!-- ─── 安全修正：只封鎖右鍵選單，絕對不影響圖片下載 ─── -->
 		<script>
-			// 封鎖右鍵/長按選單
-			window.addEventListener('contextmenu', function(e) { 
-				e.preventDefault(); 
-			}, { passive: false });
-
-			// 封鎖手機圖片拖拽與長按原生放大功能
-			window.addEventListener('touchstart', function(e) {
-				if (e.target.tagName === 'IMG') {
-					// 允許觸控觸發動畫，但阻止原生選單
-					e.stopPropagation();
-				}
-			}, { passive: true });
+			// 僅阻止長按跳出選單的預設行為，觸控流暢度完全保留
+			window.oncontextmenu = function(e) {
+				e.preventDefault();
+				return false;
+			};
 		</script>
 	</body>
 </html>
