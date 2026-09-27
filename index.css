@@ -1,0 +1,133 @@
+/* ==========================================
+   1. 通用基礎設定（強效置中修正版）
+   ========================================== */
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(circle, #2c3e50, #000000); /* 質感漸層背景 */
+	overflow: hidden;
+}
+
+/* 外層容器：鎖定全螢幕 */
+.wrap {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+}
+
+/* 核心修正：將 3D 立方體的中心點精準鎖在螢幕正中央 */
+.cube {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform-style: preserve-3d;
+	/* 動畫中必須包含 translate(-50%, -50%) 確保旋轉軸心在正中央 */
+	animation: rotateCube 16s infinite linear; 
+}
+
+/* 旋轉動畫軌跡 */
+@keyframes rotateCube {
+	0% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); }
+	100% { transform: translate(-50%, -50%) rotateX(360deg) rotateY(360deg); }
+}
+
+/* 讓所有面預設靠左上對齊基準點 */
+.cube div, .cube span {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: transform 0.4s ease; /* 展開時的平滑動畫 */
+}
+
+/* 確保所有艾蜜莉兒的照片都完美裁切、不被壓扁 */
+.pic, .in_pic {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 8px;
+	box-shadow: 0 0 15px rgba(255,255,255,0.15);
+}
+
+.cube div { opacity: 0.85; } /* 外層大立方體微透明 */
+
+
+/* ==========================================
+   2. 電腦版樣式（螢幕寬度大於 769px 時啟用）
+   大立方體 300px / 內層小立方體 150px
+   ========================================== */
+@media screen and (min-width: 769px) {
+	.wrap { perspective: 1000px; } /* 電腦版透視深 */
+	
+	.cube {
+		width: 300px;
+		height: 300px;
+	}
+	/* 外層 6 面定位 (以 300px 為基準，推 150px) */
+	.cube > div { width: 300px; height: 300px; }
+	.out_front { transform: rotateY(0deg) translateZ(150px); }
+	.out_back  { transform: rotateY(180deg) translateZ(150px); }
+	.out_left  { transform: rotateY(-90deg) translateZ(150px); }
+	.out_right { transform: rotateY(90deg) translateZ(150px); }
+	.out_top   { transform: rotateX(90deg) translateZ(150px); }
+	.out_bottom{ transform: rotateX(-90deg) translateZ(150px); }
+
+	/* 內層 6 面定位 (以 150px 為基準，往中心位移 75px，推 75px) */
+	.cube > span { width: 150px; height: 150px; top: 75px; left: 75px; }
+	.in_front { transform: rotateY(0deg) translateZ(75px); }
+	.in_back  { transform: rotateY(180deg) translateZ(75px); }
+	.in_left  { transform: rotateY(-90deg) translateZ(75px); }
+	.in_right { transform: rotateY(90deg) translateZ(75px); }
+	.in_top   { transform: rotateX(90deg) translateZ(75px); }
+	.in_bottom{ transform: rotateX(-90deg) translateZ(75px); }
+
+	/* 電腦版：滑鼠移上去時，外層相簿「大爆開」特效 */
+	.cube:hover .out_front { transform: rotateY(0deg) translateZ(250px); }
+	.cube:hover .out_back  { transform: rotateY(180deg) translateZ(250px); }
+	.cube:hover .out_left  { transform: rotateY(-90deg) translateZ(250px); }
+	.cube:hover .out_right { transform: rotateY(90deg) translateZ(250px); }
+	.cube:hover .out_top   { transform: rotateX(90deg) translateZ(250px); }
+	.cube:hover .out_bottom{ transform: rotateX(-90deg) translateZ(250px); }
+}
+
+
+/* ==========================================
+   3. 手機版樣式（螢幕寬度小於等於 768px 時自動切換）
+   大立方體縮小為 180px / 內層小立方體 90px（完美塞進手機螢幕）
+   ========================================== */
+@media screen and (max-width: 768px) {
+	.wrap { perspective: 600px; } /* 手機版透視淺，避免 3D 變形太大 */
+	
+	.cube {
+		width: 180px;
+		height: 180px;
+	}
+	/* 外層 6 面定位 (以 180px 為基準，推 90px) */
+	.cube > div { width: 180px; height: 180px; }
+	.out_front { transform: rotateY(0deg) translateZ(90px); }
+	.out_back  { transform: rotateY(180deg) translateZ(90px); }
+	.out_left  { transform: rotateY(-90deg) translateZ(90px); }
+	.out_right { transform: rotateY(90deg) translateZ(90px); }
+	.out_top   { transform: rotateX(90deg) translateZ(90px); }
+	.out_bottom{ transform: rotateX(-90deg) translateZ(90px); }
+
+	/* 內層 6 面定位 (以 90px 為基準，往中心位移 45px，推 45px) */
+	.cube > span { width: 90px; height: 90px; top: 45px; left: 45px; }
+	.in_front { transform: rotateY(0deg) translateZ(45px); }
+	.in_back  { transform: rotateY(180deg) translateZ(45px); }
+	.in_left  { transform: rotateY(-90deg) translateZ(45px); }
+	.in_right { transform: rotateY(90deg) translateZ(45px); }
+	.in_top   { transform: rotateX(90deg) translateZ(45px); }
+	.in_bottom{ transform: rotateX(-90deg) translateZ(45px); }
+
+	/* 手機版：手指點擊或長按時，外層相簿「微爆開」特效 */
+	.cube:active .out_front { transform: rotateY(0deg) translateZ(140px); }
+	.cube:active .out_back  { transform: rotateY(180deg) translateZ(140px); }
+	.cube:active .out_left  { transform: rotateY(-90deg) translateZ(140px); }
+	.cube:active .out_right { transform: rotateY(90deg) translateZ(140px); }
+	.cube:active .out_top   { transform: rotateX(90deg) translateZ(140px); }
+	.cube:active .out_bottom{ transform: rotateX(-90deg) translateZ(140px); }
+}
